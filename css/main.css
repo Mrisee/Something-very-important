@@ -1,0 +1,41 @@
+@import url(nullstyle.css);
+
+html, body{
+    height: 100%;
+    background-color: #000;
+}
+.swiper {
+}
+.slider {
+    height: 100%;
+}
+.swiper-wrapper {
+}
+.slider-wrapper {
+    will-change: transform;
+    transform-style: preserve-3d;
+}
+.swiper-slide {
+}
+.slider__item {
+    overflow: hidden;
+}
+.slider__layer {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+.slider__layer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    box-shadow: inset 0 250px rgb(0, 0, 0 / .3);
+}
+#myCanvas{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
