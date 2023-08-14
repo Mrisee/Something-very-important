@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Parallax</title>
-
-    <link rel="stylesheet" href="libs/swiper/swiper-bundle.min.css">
-    <script src="libs/swiper/swiper-bundle.min.js" defer></script>
     <script src="js/parrots.js" defer></script>
 
     <link rel="stylesheet" href="css/main.css">
-    <script src="js/app.js" defer></script>
 </head>
+
 <body>
-    <canvas id="myCanvas"></canvas>
+    <audio>
+        <source src="img/Cardi B feat. Bad Bunny & J Balvin - I Like It.mp3" type="audio/mpeg">
+    </audio>
+    <div class="welcomeScreen">
+        <button class="play" onclick="start()">Play</button>
+        <canvas id="myCanvas"></canvas>
+        <img class="mainParrot" src="/img/parrot.gif" alt="">
+    </div>
 </body>
+
 </html>

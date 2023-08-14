@@ -31,14 +31,16 @@ let arr = {
 }
 function Parrot() {
 	this.x = -50
-	this.y = Math.random() * height
-	this.vx = 10 + Math.random() * 5
+	this.y = Math.random() * height - 100
+	this.vx = width * 0.01 + Math.random() * 15
 	this.vy = 0
 	this.radius = radius * Math.random() + 15
 	this.dir = Math.random()
 	this.frames = loadFrames() // функция возвращающая массив с кадрами
 	this.currentFrameIndex = Math.floor(Math.random() * 10)
 	this.opacity = Math.random()
+	this.width = width * 0.2 * Math.random() + 50
+	this.height = this.width
 }
 
 Parrot.prototype = {
@@ -49,22 +51,25 @@ Parrot.prototype = {
 			if (par.dir >= 0.5) {
 				if (par.x < -100 || par.x > canvas.width + 50) {
 					par.x = -100
-					par.vx = 10 + Math.random() * 5
-					par.y = Math.random() * height
+					par.vx = width * 0.01 + Math.random() * 15
+					par.y = Math.random() * height - 100
+					par.width = width * 0.1 * Math.random() + 150
+					par.height = par.width
 				}
 				par.x += par.vx
 			}
 			else {
 				if (par.x < -100 || par.x > canvas.width + 50) {
 					par.x = canvas.width + 50
-					
-					par.vx = -10 - Math.random() * 5
-					par.y = Math.random() * height
+					par.vx = -width * 0.01 - Math.random() * 15
+					par.y = Math.random() * height - 100
+					par.width = width * 0.2 * Math.random() + 50
+					par.height = par.width
 				}
 				par.x += par.vx
 			}
 			// Отрисовываем текущий кадр
-			ctx.drawImage(par.frames[par.currentFrameIndex], par.x, par.y);
+			ctx.drawImage(par.frames[par.currentFrameIndex], par.x, par.y, par.width, par.height);
 			par.currentFrameIndex++;
 
 			if (par.currentFrameIndex >= par.frames.length) {
@@ -75,21 +80,21 @@ Parrot.prototype = {
 }
 
 function loadFrames() {
-  var loadedFrames = 0;
-  let framesArray = [];
-  frameUrls.forEach(function(url) {
-	var frame = new Image();
+	var loadedFrames = 0;
+	let framesArray = [];
+	frameUrls.forEach(function (url) {
+		var frame = new Image();
 
-	// Устанавливаем источник изображения для каждого кадра
-	frame.src = url;
+		// Устанавливаем источник изображения для каждого кадра
+		frame.src = url;
 
-	// Обработчик события загрузки кадра
-	frame.onload = function() {
-	  loadedFrames++;
-	};
-	framesArray.push(frame);
-  });
-  return framesArray;
+		// Обработчик события загрузки кадра
+		frame.onload = function () {
+			loadedFrames++;
+		};
+		framesArray.push(frame);
+	});
+	return framesArray;
 }
 
 function createParrots() {
@@ -101,11 +106,18 @@ function createParrots() {
 	par.animate()
 }
 
-setInterval(createParrots, 1000 / 25)
-setBgColor = () => {
-		canvas.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16)
-		canvas.style.border = `30px solid ${'#' +Math.floor(Math.random()*16777215).toString(16)}` 
-	}
-	setInterval(setBgColor, 1000)
 
+function start() {
+setInterval(createParrots, 1000 / 20)
+setBgColor = () => {
+	canvas.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16)
+	canvas.style.border = `30px solid ${'#' + Math.floor(Math.random() * 16777215).toString(16)}`
+}
+setInterval(setBgColor, 1000)
+document.querySelector('audio').play();
+document.querySelector('.play').style.opacity=0
+document.querySelector('.mainParrot').style.display = 'block'
+document.querySelector('.mainParrot').animate( {width: ['0', '40%'], height: ['0', '35%']}, {duration: 800})
+
+}
 
