@@ -27,7 +27,7 @@ var parrot = {
 };
 let arr = {
 	entity: [],
-	num: 13
+	num: 10
 }
 function Parrot() {
 	this.x = -50
