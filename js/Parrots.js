@@ -7,16 +7,16 @@ canvas.width = width
 canvas.height = height
 let radius = 50
 
-var frameUrls = ["../img/0.gif",
-	"../img/1.gif",
-	"../img/2.gif",
-	"../img/3.gif",
-	"../img/4.gif",
-	"../img/5.gif",
-	"../img/6.gif",
-	"../img/7.gif",
-	"../img/8.gif",
-	"../img/9.gif",]
+var frameUrls = ["../img/0.png",
+	"../img/1.png",
+	"../img/2.png",
+	"../img/3.png",
+	"../img/4.png",
+	"../img/5.png",
+	"../img/6.png",
+	"../img/7.png",
+	"../img/8.png",
+	"../img/9.png",]
 
 var parrot = {
 	frames: [],
@@ -34,11 +34,9 @@ function Parrot() {
 	this.y = Math.random() * height - 100
 	this.vx = width * 0.01 + Math.random() * 15
 	this.vy = 0
-	this.radius = radius * Math.random() + 15
 	this.dir = Math.random()
 	this.frames = loadFrames() // функция возвращающая массив с кадрами
 	this.currentFrameIndex = Math.floor(Math.random() * 10)
-	this.opacity = Math.random()
 	this.width = width * 0.2 * Math.random() + 50
 	this.height = this.width
 }
@@ -117,7 +115,7 @@ setInterval(setBgColor, 1000)
 document.querySelector('audio').play();
 document.querySelector('.play').style.opacity=0
 document.querySelector('.mainParrot').style.display = 'block'
-document.querySelector('.mainParrot').animate( {width: ['0', '40%'], height: ['0', '35%']}, {duration: 800})
+document.querySelector('.mainParrot').animate( {width: ['0', '(1vh + 1vw)*20'], height: ['0', '(1vh + 1vw)*20']}, {duration: 800})
 
 }
 

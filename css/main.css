@@ -71,8 +71,8 @@ html, body{
 .mainParrot{
     display: none;
     position: absolute;
-    height: 35%;
-    width: 40%;
+    height: calc((1vh + 1vw )* 15);
+    width: calc((1vh + 1vw )* 15);
     opacity: .8;
     z-index: 2;
 }
