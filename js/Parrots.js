@@ -1,121 +1,137 @@
-
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-const width = window.innerWidth,
-	height = window.innerHeight
-canvas.width = width
-canvas.height = height
-let radius = 50
+const width = window.innerWidth;
+const height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
 
-var frameUrls = ["./img/0.png",
-	"./img/1.png",
-	"./img/2.png",
-	"./img/3.png",
-	"./img/4.png",
-	"./img/5.png",
-	"./img/6.png",
-	"./img/7.png",
-	"./img/8.png",
-	"./img/9.png"]
+const frameUrls = [
+  "./img/0.png",
+  "./img/1.png",
+  "./img/2.png",
+  "./img/3.png",
+  "./img/4.png",
+  "./img/5.png",
+  "./img/6.png",
+  "./img/7.png",
+  "./img/8.png",
+  "./img/9.png",
+];
 
-var parrot = {
-	frames: [],
-	x: 0,
-	y: 0,
-	speed: 10,
-	currentFrameIndex: 0
+const arr = {
+  entity: [],
+  num: 10,
 };
-let arr = {
-	entity: [],
-	num: 10
-}
-function Parrot() {
-	this.x = -50
-	this.y = Math.random() * height - 100
-	this.vx = width * 0.01 + Math.random() * 15
-	this.vy = 0
-	this.dir = Math.random()
-	this.frames = loadFrames() // функция возвращающая массив с кадрами
-	this.currentFrameIndex = Math.floor(Math.random() * 10)
-	this.width = width * 0.2 * Math.random() + 50
-	this.height = this.width
+const BASE_SPEED = 3;
+const RANDOM_SPEED = 12;
+const FRAME_DELAY = 3;
+
+const frames = loadFrames();
+let animationId = null;
+
+function Parrot(sharedFrames) {
+  this.frames = sharedFrames;
+  this.currentFrameIndex = Math.floor(Math.random() * this.frames.length);
+  this.frameTick = 0;
+  this.dir = Math.random();
+  this.reset(true);
 }
 
 Parrot.prototype = {
-	animate: function () {
-		for (let i = 0; i < arr.num; i++) {
-			let par = arr.entity[i];
-			ctx.globalAlpha = 0.8;
-			if (par.dir >= 0.5) {
-				if (par.x < -100 || par.x > canvas.width + 50) {
-					par.x = -100
-					par.vx = width * 0.01 + Math.random() * 15
-					par.y = Math.random() * height - 100
-					par.width = width * 0.1 * Math.random() + 150
-					par.height = par.width
-				}
-				par.x += par.vx
-			}
-			else {
-				if (par.x < -100 || par.x > canvas.width + 50) {
-					par.x = canvas.width + 50
-					par.vx = -width * 0.01 - Math.random() * 15
-					par.y = Math.random() * height - 100
-					par.width = width * 0.2 * Math.random() + 50
-					par.height = par.width
-				}
-				par.x += par.vx
-			}
-			// Отрисовываем текущий кадр
-			ctx.drawImage(par.frames[par.currentFrameIndex], par.x, par.y, par.width, par.height);
-			par.currentFrameIndex++;
-
-			if (par.currentFrameIndex >= par.frames.length) {
-				par.currentFrameIndex = 0;
-			}
-		}
-	}
-}
+  reset: function (initial) {
+    this.y = Math.random() * height - 100;
+    if (this.dir >= 0.5) {
+      this.x = initial ? -50 : -100;
+      this.vx = BASE_SPEED + Math.random() * RANDOM_SPEED;
+      this.width = width * 0.1 * Math.random() + 150;
+    } else {
+      this.x = initial ? canvas.width + 50 : canvas.width + 50;
+      this.vx = -(BASE_SPEED + Math.random() * RANDOM_SPEED);
+      this.width = width * 0.2 * Math.random() + 50;
+    }
+    this.height = this.width;
+  },
+  update: function () {
+    if (this.x < -100 || this.x > canvas.width + 50) {
+      this.reset(false);
+    }
+    this.x += this.vx;
+    this.frameTick++;
+    if (this.frameTick >= FRAME_DELAY) {
+      this.frameTick = 0;
+      this.currentFrameIndex++;
+      if (this.currentFrameIndex >= this.frames.length) {
+        this.currentFrameIndex = 0;
+      }
+    }
+  },
+  draw: function () {
+    ctx.drawImage(
+      this.frames[this.currentFrameIndex],
+      this.x,
+      this.y,
+      this.width,
+      this.height,
+    );
+  },
+};
 
 function loadFrames() {
-	var loadedFrames = 0;
-	let framesArray = [];
-	frameUrls.forEach(function (url) {
-		var frame = new Image();
-
-		// Устанавливаем источник изображения для каждого кадра
-		frame.src = url;
-
-		// Обработчик события загрузки кадра
-		frame.onload = function () {
-			loadedFrames++;
-		};
-		framesArray.push(frame);
-	});
-	return framesArray;
+  var framesArray = [];
+  frameUrls.forEach(function (url) {
+    const frame = new Image();
+    frame.src = url;
+    framesArray.push(frame);
+  });
+  return framesArray;
 }
 
-function createParrots() {
-	ctx.clearRect(0, 0, width, height)
-	for (let i = 0; i < arr.num; i++) {
-		arr.entity.push(new Parrot())
-		par = arr.entity[i]
-	}
-	par.animate()
+function initParrots() {
+  arr.entity = [];
+  for (let i = 0; i < arr.num; i++) {
+    arr.entity.push(new Parrot(frames));
+  }
 }
 
+function animate() {
+  ctx.clearRect(0, 0, width, height);
+  ctx.globalAlpha = 0.8;
+  for (let i = 0; i < arr.entity.length; i++) {
+    arr.entity[i].update();
+    arr.entity[i].draw();
+  }
+  animationId = requestAnimationFrame(animate);
+}
+
+function randomHexColor() {
+  return (
+    "#" +
+    Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, "0")
+  );
+}
 
 function start() {
-setInterval(createParrots, 1000 / 20)
-setBgColor = () => {
-	canvas.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16)
-	canvas.style.border = `30px solid ${'#' + Math.floor(Math.random() * 16777215).toString(16)}`
-}
-setInterval(setBgColor, 1000)
-document.querySelector('audio').play();
-document.querySelector('.play').style.opacity=0
-document.querySelector('.mainParrot').style.display = 'block'
-document.querySelector('.mainParrot').animate( {width: ['0', '(1vh + 1vw)*20'], height: ['0', '(1vh + 1vw)*20']}, {duration: 800})
+  const audio = document.querySelector("audio");
+  const play = document.querySelector(".play");
+  const mainParrot = document.querySelector(".mainParrot");
 
-}
+  initParrots();
+  if (animationId === null) {
+    animate();
+  }
 
+  const setBgColor = () => {
+    canvas.style.backgroundColor = randomHexColor();
+    canvas.style.border = "30px solid " + randomHexColor();
+  };
+  setInterval(setBgColor, 1000);
+  audio.play();
+  play.style.opacity = 0;
+  mainParrot.style.display = "block";
+  mainParrot.animate(
+    { width: ["0", "(1vh + 1vw)*20"], height: ["0", "(1vh + 1vw)*20"] },
+    { duration: 800 },
+  );
+}
